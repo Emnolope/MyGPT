@@ -8,8 +8,9 @@ tasks:
         shopt -s dotglob
         mv * $TMP_DIR/
         bun create --no-git next-app .
-        mv $TMP_DIR/* ./
-        rmdir $TMP_DIR
+        cp -r $TMP_DIR/* ./
+        rm -r $TMP_DIR
+        shopt -u dotglob
         bun init -y
       fi
       bun install
