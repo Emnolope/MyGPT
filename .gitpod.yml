@@ -3,6 +3,8 @@ image: gitpod/workspace-bun
 tasks:
   - name: Init a bun project and run
     init: |
+      bun install -g npm
+      bun create react-app .
       # Init a project if needed
       if test ! -e package.json; then {
         bun init -y
