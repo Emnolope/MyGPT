@@ -2,16 +2,17 @@ image: gitpod/workspace-bun
 
 tasks:
   - name: Init a bun project and run
-    init: pwd #|
-      #TMP_DIR=$(mktemp -d)
-      #mv * $TMP_DIR/ 2>/dev/null
-      #bun create next-app .
-      #mv $TMP_DIR/* ./
-      #rmdir $TMP_DIR
-      #if test ! -e package.json; then
-      #  bun init -y
-      #fi
-      #bun install
+    init: |
+      TMP_DIR=$(mktemp -d)
+      shopt -s dotglob
+      mv * $TMP_DIR/
+      bun create next-app .
+      mv $TMP_DIR/* ./
+      rmdir $TMP_DIR
+      if test ! -e package.json; then
+        bun init -y
+      fi
+      bun install
     command: |
       bun run index.ts
 
