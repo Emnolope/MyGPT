@@ -1,26 +1,33 @@
-// CombinedComponent.tsx
 import React from 'react';
 
 // Main Home Component
 const Home: React.FC = () => {
   const [range, setRange] = React.useState(10000000);
-  const [randomNumbers, setRandomNumbers] = React.useState([
-    <RandomNumber key={0} range={range} />,
-    <RandomNumber key={1} range={range} />,
-    <RandomNumber key={2} range={range} />,
-  ]);
+  const [label, setLabel] = React.useState('');
+  const [randomNumbers, setRandomNumbers] = React.useState([]);
 
   const addRandomNumber = () => {
-    setRandomNumbers([...randomNumbers, <RandomNumber key={randomNumbers.length} range={range} />]);
+    setRandomNumbers(prevNumbers => [
+      ...prevNumbers,
+      <LabeledRandomNumber key={prevNumbers.length} range={range} label={label} />,
+    ]);
+    setLabel('');
   };
 
   return (
     <main>
       <h1>Horizon</h1>
       <h1 className='text-blue-400'> Blue</h1>
-      <NumberInput onRangeChange={setRange}/>
+      <NumberInput onRangeChange={setRange} />
       {randomNumbers}
-      <button onClick={addRandomNumber}>Add Random Number</button>
+      <input
+        type="text"
+        placeholder="Label for random number"
+        value={label}
+        onChange={(e) => setLabel(e.target.value)}
+        className="bg-black text-white p-2 rounded mt-2"
+      />
+      <button onClick={addRandomNumber} className="mt-2">Add Random Number</button>
     </main>
   );
 };
@@ -43,12 +50,13 @@ const NumberInput: React.FC<NumberInputProps> = ({ onRangeChange }) => {
   );
 };
 
-// RandomNumber Component
-interface RandomNumberProps {
+// LabeledRandomNumber Component
+interface LabeledRandomNumberProps {
   range: number;
+  label: string;
 }
 
-const RandomNumber: React.FC<RandomNumberProps> = ({ range }) => {
+const LabeledRandomNumber: React.FC<LabeledRandomNumberProps> = ({ range, label }) => {
   const [number, setNumber] = React.useState<number>(0);
 
   const fetchRandomNumber = async () => {
@@ -70,5 +78,10 @@ const RandomNumber: React.FC<RandomNumberProps> = ({ range }) => {
     fetchRandomNumber();
   }, [range]);
 
-  return <h3>{number}</h3>;
+  return (
+    <div>
+      <span>{label}: </span>
+      <h3>{number}</h3>
+    </div>
+  );
 };
