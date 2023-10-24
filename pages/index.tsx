@@ -1,9 +1,8 @@
-// index.tsx
+// CombinedComponent.tsx
 import React from 'react';
-import RandomNumber from './RandomNumber';
-import NumberInput from './NumberInput';
 
-export default function Home() {
+// Main Home Component
+const Home: React.FC = () => {
   const [range, setRange] = React.useState(10000000);
   const [randomNumbers, setRandomNumbers] = React.useState([
     <RandomNumber key={0} range={range} />,
@@ -24,5 +23,38 @@ export default function Home() {
       {randomNumbers}
       <button onClick={addRandomNumber}>Add Random Number</button>
     </main>
-  )
+  );
+};
+
+export default Home;
+
+// NumberInput Component
+interface NumberInputProps {
+  onRangeChange: (range: number) => void;
 }
+
+const NumberInput: React.FC<NumberInputProps> = ({ onRangeChange }) => {
+  return (
+    <input
+      type="number"
+      placeholder="Enter number range"
+      onChange={(e) => onRangeChange(Number(e.target.value))}
+      className="bg-black text-white p-2 rounded"
+    />
+  );
+};
+
+// RandomNumber Component
+interface RandomNumberProps {
+  range: number;
+}
+
+const RandomNumber: React.FC<RandomNumberProps> = ({ range }) => {
+  const [number, setNumber] = React.useState<number>(0);
+
+  React.useEffect(() => {
+    setNumber(Math.floor(Math.random() * range));
+  }, [range]);
+
+  return <h3>{number}</h3>;
+};
