@@ -19,7 +19,6 @@ const Home: React.FC = () => {
       <h1>Horizon</h1>
       <h1 className='text-blue-400'> Blue</h1>
       <NumberInput onRangeChange={setRange}/>
-      <p>HiErbie</p>
       {randomNumbers}
       <button onClick={addRandomNumber}>Add Random Number</button>
     </main>
@@ -52,8 +51,23 @@ interface RandomNumberProps {
 const RandomNumber: React.FC<RandomNumberProps> = ({ range }) => {
   const [number, setNumber] = React.useState<number>(0);
 
+  const fetchRandomNumber = async () => {
+    try {
+      const response = await fetch(`https://www.random.org/integers/?num=1&min=1&max=${range}&col=1&base=10&format=plain&rnd=new`);
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+      const randomNum = await response.text();
+      setNumber(Number(randomNum));
+    } catch (error) {
+      console.error(error);
+      // Fallback to the original local random method in case of error
+      setNumber(Math.floor(Math.random() * range));
+    }
+  };
+
   React.useEffect(() => {
-    setNumber(Math.floor(Math.random() * range));
+    fetchRandomNumber();
   }, [range]);
 
   return <h3>{number}</h3>;
