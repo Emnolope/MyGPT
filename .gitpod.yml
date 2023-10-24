@@ -14,7 +14,7 @@ tasks:
       fi
       bun install
     command: |
-      bun run index.ts
+      bun upgrade --canary
 
 ports:
   - port: 3000
